@@ -164,7 +164,7 @@ def get_current_player(board):
 # Step 15 - switch_player
 def switch_player(player):
     """Return the opponent of `player` (1 <-> -1)."""
-    # TODO: return the opposite player given 1 for X and -1 for O.
+    
     if player == 1:
         return -1
     else:
