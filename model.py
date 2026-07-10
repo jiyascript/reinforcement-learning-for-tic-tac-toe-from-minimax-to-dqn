@@ -289,8 +289,19 @@ def compute_outcome_rates(outcomes):
     }
     return rate_map
 
-# Step 23 - minimax_terminal_score (not yet solved)
-# TODO: implement
+# Step 23 - minimax_terminal_score
+def minimax_terminal_score(status):
+    """Return +1 for 'X_win', -1 for 'O_win', 0 for 'draw'."""
+    # minimax assumes perfect information, deterministic environment, perfect opponent, full searches of future states
+    # RL assumes that optimalstrategy is unknown, will learn from experience, improve over many games
+    #minimax gives the optimal policy, RL algorithm tries to learn a policy that approaches it
+    #using zero-sum convention
+    if status == 'X_win':
+        return 1
+    elif status == 'O_win':
+        return -1
+    else:
+        return 0
 
 # Step 24 - minimax_value (not yet solved)
 # TODO: implement
