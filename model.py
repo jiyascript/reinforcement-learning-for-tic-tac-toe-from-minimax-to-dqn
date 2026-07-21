@@ -561,8 +561,10 @@ def initialize_q_table():
 def get_q_value(q_table, state_key, action):
     return q_table.get((state_key,action),0.0)
 
-# Step 35 - set_q_value (not yet solved)
-# TODO: implement
+# Step 35 - set_q_value
+def set_q_value(q_table, state_key, action, value):
+    """Write a new Q-value for a (state, action) pair into the Q-table."""
+    q_table[(state_key, action)] = value
 
 # Step 36 - choose_learning_rate_alpha (not yet solved)
 # TODO: implement
