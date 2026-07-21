@@ -428,92 +428,19 @@ def minimax_alpha_beta(board, player, alpha, beta):
 def play_minimax_vs_random_matches(n_games, minimax_plays_x, rng):
     outcomes = []
     minimax_player = 1 if minimax_plays_x else -1
-    cache = {}
-
-    def cached_minimax(board, player):
-        key = (board.tobytes(), player)
-
-        if key in cache:
-            return cache[key]
-
-        status = get_game_status(board)
-
-        if status != "ongoing":
-            value = minimax_terminal_score(status)
-            cache[key] = value
-            return value
-
-        values = []
-
-        for row, col in get_legal_moves(board):
-            next_board = place_move(board, row, col, player)
-            value = cached_minimax(
-                next_board,
-                switch_player(player)
-            )
-            values.append(value)
-
-        if player == 1:
-            result = max(values)
-        else:
-            result = min(values)
-
-        cache[key] = result
-        return result
-
-    def cached_best_move(board, player):
-        best_move = None
-
-        if player == 1:
-            best_score = float("-inf")
-
-            for row, col in get_legal_moves(board):
-                next_board = place_move(board, row, col, player)
-                score = cached_minimax(
-                    next_board,
-                    switch_player(player)
-                )
-
-                if score > best_score:
-                    best_score = score
-                    best_move = (row, col)
-
-        else:
-            best_score = float("inf")
-
-            for row, col in get_legal_moves(board):
-                next_board = place_move(board, row, col, player)
-                score = cached_minimax(
-                    next_board,
-                    switch_player(player)
-                )
-
-                if score < best_score:
-                    best_score = score
-                    best_move = (row, col)
-
-        return best_move
-
-    for _ in range(n_games):
+    for n in range(n_games):
         game = TicTacToeGame()
 
         while not game.is_terminal():
             player = game.current_player
-
             if player == minimax_player:
-                move = cached_best_move(game.board, player)
+                move = minimax_best_move(game.board, player)
             else:
-                move = random_move_agent(
-                    game.board,
-                    player,
-                    rng
-                )
-
+                move = random_move_agent(game.board, player, rng)
             game.step(move[0], move[1])
 
         outcomes.append(game.status)
-
-    return outcomes
+    return compute_outcome_rates(outcomes)
 
 # Step 30 - play_minimax_vs_minimax_matches (not yet solved)
 # TODO: implement
