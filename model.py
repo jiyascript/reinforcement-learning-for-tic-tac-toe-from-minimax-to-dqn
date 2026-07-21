@@ -442,8 +442,86 @@ def play_minimax_vs_random_matches(n_games, minimax_plays_x, rng):
         outcomes.append(game.status)
     return compute_outcome_rates(outcomes)
 
-# Step 30 - play_minimax_vs_minimax_matches (not yet solved)
-# TODO: implement
+# Step 30 - play_minimax_vs_minimax_matches
+def play_minimax_vs_minimax_matches(n_games):
+    """Play minimax-vs-minimax games and report outcome rates."""
+    outcomes = []
+
+    def alpha_beta(board, player, alpha, beta):
+        status = get_game_status(board)
+
+        if status != "ongoing":
+            return minimax_terminal_score(status), None
+
+        best_move = None
+
+        if player == 1:
+            best_score = float("-inf")
+
+            for row, col in get_legal_moves(board):
+                next_board = place_move(board, row, col, player)
+
+                score, _ = alpha_beta(
+                    next_board,
+                    switch_player(player),
+                    alpha,
+                    beta
+                )
+
+                if score > best_score:
+                    best_score = score
+                    best_move = (row, col)
+
+                alpha = max(alpha, best_score)
+
+                if alpha >= beta:
+                    break
+
+        else:
+            best_score = float("inf")
+
+            for row, col in get_legal_moves(board):
+                next_board = place_move(board, row, col, player)
+
+                score, _ = alpha_beta(
+                    next_board,
+                    switch_player(player),
+                    alpha,
+                    beta
+                )
+
+                if score < best_score:
+                    best_score = score
+                    best_move = (row, col)
+
+                beta = min(beta, best_score)
+
+                if alpha >= beta:
+                    break
+
+        return best_score, best_move
+
+    for _ in range(n_games):
+        game = TicTacToeGame()
+
+        while not game.is_terminal():
+            _, move = alpha_beta(
+                game.board,
+                game.current_player,
+                float("-inf"),
+                float("inf")
+            )
+
+            game.step(move[0], move[1])
+
+        outcomes.append(game.status)
+
+    result = compute_outcome_rates(outcomes)
+    result["all_draws"] = all(
+        status == "draw" for status in outcomes
+    )
+
+    return result
 
 # Step 31 - encode_board_state_key (not yet solved)
 # TODO: implement
