@@ -539,8 +539,15 @@ def encode_board_state_key(board):
             key += mapping[board[row, col]]
     return key
 
-# Step 32 - canonical_board_key (not yet solved)
-# TODO: implement
+# Step 32 - canonical_board_key
+def canonical_board_key(board):
+    keys = []
+    for k in range(4):
+        rotated = np.rot90(board, k)
+        keys.append(encode_board_state_key(rotated))
+        reflected = np.fliplr(rotated)
+        keys.append(encode_board_state_key(reflected))
+    return min(keys)
 
 # Step 33 - initialize_q_table (not yet solved)
 # TODO: implement
